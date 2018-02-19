@@ -2,7 +2,6 @@ import {Component, OnInit} from '@angular/core';
 // Se deberán quitar
 import {FormField} from '../core/dynamic-form/form-field';
 import {Validators} from '@angular/forms';
-import {DynamicFormComponent} from "../core/dynamic-form/dynamic-form.component";
 
 @Component({
   selector: 'app-another',
@@ -12,9 +11,8 @@ import {DynamicFormComponent} from "../core/dynamic-form/dynamic-form.component"
 export class AnotherComponent implements OnInit {
   fields: Array<FormField>;
   form: any;
-  show: boolean;
 
-  constructor(private dynamicFormComponent: DynamicFormComponent) {
+  constructor() {
   }
 
   ngOnInit() {
@@ -46,8 +44,7 @@ export class AnotherComponent implements OnInit {
       inline: false,
       anotherValidations: [],
       events: []
-    },
-      {
+    }, {
       type: 'textarea',
       name: 'textarea',
       id: 'textarea',
@@ -117,25 +114,19 @@ export class AnotherComponent implements OnInit {
       anotherValidations: [],
       events: []
     }];
-
-
-    this.show = true;
   }
 
   onFormCreated(form) {
     this.form = form;
-    //var field = this.dynamicFormComponent.getField('hidden');
-    //console.log('---', field);
+    const field = this.getField('hidden');
 
     this.form.get('select').valueChanges.subscribe(value => {
-      console.log(value);
-
       if (value === '2') {
-        //this.fields[4].hidden = false;
-        //field.hidden = false;
+        field.hidden = false;
+        this.form.get('hidden').enable();
       } else {
-        //this.fields[4].hidden = true;
-        //field.hidden = true;
+        field.hidden = true;
+        this.form.get('hidden').disable();
       }
     });
   }
@@ -147,4 +138,16 @@ export class AnotherComponent implements OnInit {
   /*onChange() {
     console.log('change');
   }*/
+
+  getField(id: string) {
+    let field = null;
+
+    this.fields.forEach(item => {
+      if (item.id === id) {
+        field = item;
+      }
+    });
+
+    return field;
+  }
 }

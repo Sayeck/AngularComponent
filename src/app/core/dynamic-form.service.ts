@@ -4,7 +4,7 @@ import {Validators} from '@angular/forms';
 
 @Injectable()
 export class DynamicFormService {
-  fields: [FormField];
+  fields: Array<FormField>;
 
   constructor() { }
 

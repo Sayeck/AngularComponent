@@ -11,6 +11,7 @@ import {FormField} from './form-field';
 export class DynamicFormComponent implements OnInit {
   formGroup: FormGroup;
   @Input() fields: Array<FormField>;
+  @Input() grid: any;
   @Output() output = new EventEmitter();
   @Output() formCreated = new EventEmitter();
 
@@ -18,6 +19,12 @@ export class DynamicFormComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.grid = [
+      [1, 2, 3],
+      [4, 5, 6],
+      [7, 8, 9]
+    ];
+
     this.createForm();
   }
 
@@ -43,6 +50,8 @@ export class DynamicFormComponent implements OnInit {
     this.formGroup = this.fb.group(formControls);
 
     this.returnForm();
+
+    //const fieldFound = this.getField(this.findField);
   }
 
   returnForm() {
@@ -50,9 +59,11 @@ export class DynamicFormComponent implements OnInit {
   }
 
   isValid(field: FormField) {
-    const formField = this.formGroup.get(field.id);
+    return !this.formGroup.get(field.id).valid;
+  }
 
-    return formField;
+  isDisabled(field: FormField) {
+    return !this.formGroup.get(field.id).disabled;
   }
 
   isValidError(field: FormField) {
@@ -76,17 +87,14 @@ export class DynamicFormComponent implements OnInit {
     this.output.emit(this.formGroup);
   }
 
-  getField(id: string) {
-    console.log('id...', id);
-    var field = null;
-
+  /*getField(id: string) {
     this.fields.forEach(field => {
-      console.log(field.id, id);
-      if(field.id == id) {
+      //console.log(field.id, id);
+      if (field.id === id) {
         return field;
       }
     });
 
-    return field;
-  }
+    return null;
+  }*/
 }
