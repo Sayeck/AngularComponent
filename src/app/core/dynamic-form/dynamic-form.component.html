@@ -2,7 +2,7 @@
   <div *ngFor="let field of fields" [ngSwitch]="field.type">
 
     <div *ngSwitchCase="'textarea'">
-      <div class="form-group"  (show)="field.hidden">
+      <div class="form-group" [hidden]="field.hidden">
         <textarea class="form-control" [name]="field.name" [id]="field.id" [placeholder]="field.placeholder" [formControlName]="field.id"></textarea>
       </div>
     </div>

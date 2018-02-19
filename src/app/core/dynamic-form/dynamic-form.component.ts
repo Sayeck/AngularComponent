@@ -10,7 +10,7 @@ import {FormField} from './form-field';
 })
 export class DynamicFormComponent implements OnInit {
   formGroup: FormGroup;
-  @Input() fields: [FormField];
+  @Input() fields: Array<FormField>;
   @Output() output = new EventEmitter();
   @Output() formCreated = new EventEmitter();
 
@@ -74,5 +74,19 @@ export class DynamicFormComponent implements OnInit {
 
   onSubmit() {
     this.output.emit(this.formGroup);
+  }
+
+  getField(id: string) {
+    console.log('id...', id);
+    var field = null;
+
+    this.fields.forEach(field => {
+      console.log(field.id, id);
+      if(field.id == id) {
+        return field;
+      }
+    });
+
+    return field;
   }
 }
