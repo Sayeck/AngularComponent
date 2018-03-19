@@ -9,13 +9,13 @@ import {FormField} from './form-field';
   styleUrls: ['./dynamic-form.component.css']
 })
 export class DynamicFormComponent implements OnInit {
-  formGroup: FormGroup;
-  @Input() fields: Array<FormField>;
-  @Input() grid: any;
+  formGroup:FormGroup;
+  @Input() fields:Array<Array<FormField>>;
+  @Input() grid:any;
   @Output() output = new EventEmitter();
   @Output() formCreated = new EventEmitter();
 
-  constructor(private fb: FormBuilder, private service: DynamicFormService) {
+  constructor(private fb:FormBuilder, private service:DynamicFormService) {
   }
 
   ngOnInit() {
@@ -33,18 +33,20 @@ export class DynamicFormComponent implements OnInit {
 
     const formControls = {};
 
-    this.fields.forEach(field => {
-      let validators = [];
+    this.fields.forEach(fields => {
+      fields.forEach(field => {
+        let validators = [];
 
-      if (field.anotherValidations.length > 0) {
-        validators = field.anotherValidations;
-      }
+        if (field.anotherValidations.length > 0) {
+          validators = field.anotherValidations;
+        }
 
-      if (field.required) {
-        validators.push(Validators.required);
-      }
+        if (field.required) {
+          validators.push(Validators.required);
+        }
 
-      formControls[field.id] = [field.value, validators];
+        formControls[field.id] = [field.value, validators];
+      });
     });
 
     this.formGroup = this.fb.group(formControls);
@@ -58,15 +60,15 @@ export class DynamicFormComponent implements OnInit {
     this.formCreated.emit(this.formGroup);
   }
 
-  isValid(field: FormField) {
+  isValid(field:FormField) {
     return !this.formGroup.get(field.id).valid;
   }
 
-  isDisabled(field: FormField) {
+  isDisabled(field:FormField) {
     return !this.formGroup.get(field.id).disabled;
   }
 
-  isValidError(field: FormField) {
+  isValidError(field:FormField) {
     const error = this.formGroup.get(field.id).errors;
     let errorMessage = '';
 
@@ -75,6 +77,8 @@ export class DynamicFormComponent implements OnInit {
     } else if (error.maxlength) {
       errorMessage = 'Máximo ' + error.maxlength.requiredLength + ' caracteres.';
     } else if (error.pattern) {
+      errorMessage = 'Formato incorrecto.';
+    } else if (error.email) {
       errorMessage = 'Formato incorrecto.';
     } else {
       errorMessage = 'Campo requerido';
@@ -88,13 +92,13 @@ export class DynamicFormComponent implements OnInit {
   }
 
   /*getField(id: string) {
-    this.fields.forEach(field => {
-      //console.log(field.id, id);
-      if (field.id === id) {
-        return field;
-      }
-    });
+   this.fields.forEach(field => {
+   //console.log(field.id, id);
+   if (field.id === id) {
+   return field;
+   }
+   });
 
-    return null;
-  }*/
+   return null;
+   }*/
 }

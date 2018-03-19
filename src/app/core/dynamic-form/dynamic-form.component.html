@@ -1,60 +1,58 @@
 <form [formGroup]="formGroup" (ngSubmit)="onSubmit()">
 
-  <div *ngFor="let field of fields" [ngSwitch]="field.type">
+  <div *ngFor="let row of fields; index as i" class="row">
 
-    <div class="row">
+    <div *ngFor="let field of fields[i]" [ngSwitch]="field.type" class="col">
 
-      <div class="col">
-
-        <div *ngSwitchCase="'textarea'">
-          <div class="form-group" [hidden]="field.hidden">
+      <div *ngSwitchCase="'textarea'">
+        <div class="form-group" [hidden]="field.hidden">
             <textarea class="form-control" [name]="field.name" [id]="field.id" [placeholder]="field.placeholder"
                       [formControlName]="field.id"></textarea>
-          </div>
         </div>
+      </div>
 
-        <div *ngSwitchCase="'select'">
-          <div class="form-group" [hidden]="field.hidden">
-            <select class="form-control" [name]="field.name" [id]="field.id" [formControlName]="field.id">
-              <option value="">{{field.placeholder}}</option>
-              <option *ngFor="let option of field.options" [value]="option.value">{{option.label}}</option>
-            </select>
-          </div>
+      <div *ngSwitchCase="'select'">
+        <div class="form-group" [hidden]="field.hidden">
+          <select class="form-control" [name]="field.name" [id]="field.id" [formControlName]="field.id">
+            <option value="">{{field.placeholder}}</option>
+            <option *ngFor="let option of field.options" [value]="option.value">{{option.label}}</option>
+          </select>
         </div>
+      </div>
 
-        <div *ngSwitchCase="'checkbox'">
-          <div class="form-check" [hidden]="field.hidden">
-            <input class="form-check-input" type="checkbox" [name]="field.name" [id]="field.id"
-                   [formControlName]="field.id" [required]="field.required">
-            <label class="form-check-label" [for]="field.id">{{field.placeholder}}</label>
-          </div>
+      <div *ngSwitchCase="'checkbox'">
+        <div class="form-check" [hidden]="field.hidden">
+          <input class="form-check-input" type="checkbox" [name]="field.name" [id]="field.id"
+                 [formControlName]="field.id" [required]="field.required">
+          <label class="form-check-label" [for]="field.id">{{field.placeholder}}</label>
         </div>
+      </div>
 
-        <div *ngSwitchCase="'radio'">
-          <div *ngFor="let option of field.options" class="form-check"
-               [ngClass]="field.inline ? 'form-check-inline' : ''" [hidden]="field.hidden">
-            <input class="form-check-input" type="radio" [name]="field.name" [id]="option.id" [value]="option.value"
-                   [formControlName]="field.id" [checked]="field.value == option.value">
-            <label class="form-check-label" [for]="option.id">{{option.label}}</label>
-          </div>
+      <div *ngSwitchCase="'radio'">
+        <div *ngFor="let option of field.options" class="form-check"
+             [ngClass]="field.inline ? 'form-check-inline' : ''" [hidden]="field.hidden">
+          <input class="form-check-input" type="radio" [name]="field.name" [id]="option.id" [value]="option.value"
+                 [formControlName]="field.id" [checked]="field.value == option.value">
+          <label class="form-check-label" [for]="option.id">{{option.label}}</label>
         </div>
+      </div>
 
-        <div *ngSwitchDefault>
-          <div class="form-group" [hidden]="field.hidden">
-            <input class="form-control" [type]="field.type" [name]="field.name" [id]="field.id"
-                   [placeholder]="field.placeholder" [formControlName]="field.id">
-          </div>
+      <div *ngSwitchDefault>
+        <div class="form-group" [hidden]="field.hidden">
+          <input class="form-control" [type]="field.type" [name]="field.name" [id]="field.id"
+                 [placeholder]="field.placeholder" [formControlName]="field.id">
         </div>
+      </div>
 
-        <div *ngIf="isValid(field) && isDisabled(field)" class="alert alert-danger">
-          {{isValidError(field)}}
-        </div>
-
+      <div *ngIf="isValid(field) && isDisabled(field)" class="alert alert-danger">
+        {{isValidError(field)}}
       </div>
 
     </div>
 
   </div>
+
+  <hr>
 
   <button type="submit" class="btn btn-primary" [disabled]="!formGroup.valid">Submit</button>
 </form>
